@@ -4,27 +4,162 @@ namespace RedisStream;
 
 use Exception;
 use JsonException;
-use Illuminate\Support\Facades\Redis;
+use InvalidArgumentException;
+use RedisStream\Exceptions\ConnectionException;
+use RedisStream\Exceptions\PublishException;
+use RedisStream\RedisAdapterManager;
 
 readonly class RedisStreamProducer
 {
-    public function __construct(public string $stream) {}
+    /**
+     * The Redis adapter instance
+     * 
+     * @var \RedisStream\Adapters\RedisAdapterInterface
+     */
+    private $redis;
 
     /**
-     * @throws JsonException
-     * @throws Exception
+     * Creates a new Redis Stream Producer
+     *
+     * @param string $stream The Redis stream name
+     * @param int|null $maxLen The maximum length of the stream (approximate)
+     * @param bool $useExactMaxLen Whether to use exact maxlen (slower) instead of approximate (~)
+     * @throws ConnectionException If the Redis connection fails
      */
-    final public function publish(string $event, string $envelop): string
+    public function __construct(
+        public string $stream,
+        public ?int $maxLen = null,
+        public bool $useExactMaxLen = false
+    ) {
+        $this->redis = RedisAdapterManager::create();
+    }
+
+    /**
+     * Publishes a message to the Redis stream
+     *
+     * @param string $event The event type/name
+     * @param string|array $payload The event payload data
+     * @param array $options Additional options for the message
+     * @return string The message ID assigned by Redis
+     * @throws JsonException If JSON encoding fails
+     * @throws RuntimeException If publishing to Redis fails
+     */
+    final public function publish(string $event, string|array $payload, array $options = []): string
     {
         try {
-            return Redis::connection('streams')->
-            xadd($this->stream, '*', ['message' => json_encode([
+            $data = [
                 'event' => $event,
-                'envelop' => $envelop,
+                'payload' => $payload,
                 'timestamp' => now()->toDateTimeString(),
-            ], JSON_THROW_ON_ERROR)]);
+            ];
+
+            // Add any additional metadata
+            if (!empty($options)) {
+                $data = array_merge($data, $options);
+            }
+
+            // Create Redis command options
+            $params = ['message' => json_encode($data, JSON_THROW_ON_ERROR)];
+
+            // Handle MAXLEN option for stream trimming
+            $streamOptions = [];
+            if ($this->maxLen !== null && $this->maxLen > 0) {
+                $approximate = $this->useExactMaxLen ? '' : '~';
+                $streamOptions['MAXLEN'] = [$approximate, $this->maxLen];
+            }
+
+            return $this->redis->xadd($this->stream, '*', $params, $streamOptions);
+        } catch (JsonException $e) {
+            throw new JsonException("Failed to encode message for Redis Stream: " . $e->getMessage(), $e->getCode(), $e);
         } catch (Exception $e) {
-            throw new \RuntimeException("Error publishing message in Redis Stream $this->stream. Message: " . $e->getMessage());
+            if (str_contains($e->getMessage(), 'connection')) {
+                throw new ConnectionException("Connection to Redis failed: " . $e->getMessage(), 0, $e);
+            }
+            
+            throw new PublishException($this->stream, $e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * Publishes a batch of messages to the Redis stream in a pipeline
+     *
+     * @param array $messages Array of messages, each with 'event' and 'payload' keys
+     * @return array Array of message IDs
+     * @throws RuntimeException If publishing to Redis fails
+     */
+    public function publishBatch(array $messages): array
+    {
+        if (empty($messages)) {
+            return [];
+        }
+
+        try {
+            $pipeline = $this->redis->pipeline();
+            
+            foreach ($messages as $message) {
+                if (!isset($message['event']) || !isset($message['payload'])) {
+                    throw new InvalidArgumentException('Each message must have event and payload keys');
+                }
+                
+                $data = [
+                    'event' => $message['event'],
+                    'payload' => $message['payload'],
+                    'timestamp' => $message['timestamp'] ?? now()->toDateTimeString(),
+                ];
+                
+                // Add any additional metadata
+                if (isset($message['options']) && is_array($message['options'])) {
+                    $data = array_merge($data, $message['options']);
+                }
+
+                // Create Redis command options
+                $params = ['message' => json_encode($data, JSON_THROW_ON_ERROR)];
+                
+                // Handle MAXLEN option for stream trimming
+                $streamOptions = [];
+                if ($this->maxLen !== null && $this->maxLen > 0) {
+                    $approximate = $this->useExactMaxLen ? '' : '~';
+                    $streamOptions['MAXLEN'] = [$approximate, $this->maxLen];
+                }
+                
+                $pipeline->xadd($this->stream, '*', $params, $streamOptions);
+            }
+            
+            return $pipeline->execute();
+        } catch (JsonException $e) {
+            throw new JsonException("Failed to encode messages for Redis Stream batch: " . $e->getMessage(), $e->getCode(), $e);
+        } catch (Exception $e) {
+            if (str_contains($e->getMessage(), 'connection')) {
+                throw new ConnectionException("Connection to Redis failed during batch publish: " . $e->getMessage(), 0, $e);
+            }
+            
+            throw new PublishException($this->stream, "Error publishing batch: " . $e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * Trims the stream to a specific length
+     *
+     * @param int $maxLen The maximum length to trim the stream to
+     * @param bool $exact Whether to use exact trimming (slower) or approximate
+     * @return int The number of messages deleted
+     * @throws RuntimeException If trimming the stream fails
+     */
+    public function trim(int $maxLen, bool $exact = false): int
+    {
+        if ($maxLen <= 0) {
+            throw new InvalidArgumentException('The maximum length must be greater than zero');
+        }
+
+        try {
+            $approximate = $exact ? '' : '~';
+            return $this->redis->xtrim($this->stream, $approximate, $maxLen);
+        } catch (Exception $e) {
+            if (str_contains($e->getMessage(), 'connection')) {
+                throw new ConnectionException("Connection to Redis failed during stream trimming: " . $e->getMessage(), 0, $e);
+            }
+            
+            throw new PublishException($this->stream, "Error trimming stream: " . $e->getMessage(), 0, $e);
         }
     }
 }

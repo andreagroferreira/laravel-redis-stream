@@ -1,0 +1,66 @@
+<?php
+
+namespace {{ namespace }};
+
+use RedisStream\RedisStreamProducer;
+use RedisStream\Exceptions\PublishException;
+
+class {{ class }}
+{
+    /**
+     * The Redis Stream producer instance.
+     *
+     * @var RedisStreamProducer
+     */
+    protected RedisStreamProducer $producer;
+
+    /**
+     * Create a new producer instance.
+     *
+     * @param RedisStreamProducer|null $producer
+     */
+    public function __construct(?RedisStreamProducer $producer = null)
+    {
+        $this->producer = $producer ?? new RedisStreamProducer(
+            '{{ stream }}',
+            config('redis_stream.max_length'),
+            config('redis_stream.use_exact_maxlen', false)
+        );
+    }
+
+    /**
+     * Publish a message to the stream.
+     *
+     * @param string $event The event type
+     * @param array $data The data to publish
+     * @param array $options Additional options
+     * @return string The message ID
+     * @throws PublishException If the message cannot be published
+     */
+    public function publish(string $event, array $data, array $options = []): string
+    {
+        return $this->producer->publish($event, $data, $options);
+    }
+
+    /**
+     * Publish a batch of messages to the stream.
+     *
+     * @param array $messages Array of messages to publish
+     * @return array Array of message IDs
+     * @throws PublishException If the messages cannot be published
+     */
+    public function publishBatch(array $messages): array
+    {
+        return $this->producer->publishBatch($messages);
+    }
+
+    /**
+     * Get the stream name.
+     *
+     * @return string
+     */
+    public function getStream(): string
+    {
+        return $this->producer->stream;
+    }
+}

@@ -1,0 +1,108 @@
+<?php
+
+namespace {{ namespace }};
+
+use RedisStream\RedisStreamConsumer;
+use RedisStream\Exceptions\ConsumeException;
+use Illuminate\Support\Facades\Log;
+
+class {{ class }}
+{
+    /**
+     * The Redis Stream consumer instance.
+     *
+     * @var RedisStreamConsumer
+     */
+    protected RedisStreamConsumer $consumer;
+
+    /**
+     * Create a new consumer instance.
+     *
+     * @param RedisStreamConsumer|null $consumer
+     */
+    public function __construct(?RedisStreamConsumer $consumer = null)
+    {
+        $this->consumer = $consumer ?? new RedisStreamConsumer(
+            '{{ stream }}',
+            '{{ group }}',
+            gethostname() . '-' . getmypid(),
+            config('redis_stream.poll_interval', 1),
+            config('redis_stream.retry_limit', 3),
+            config('redis_stream.batch_size', 10)
+        );
+    }
+
+    /**
+     * Start consuming messages from the stream.
+     *
+     * @param bool $stopOnSignal Whether to stop on SIGTERM/SIGINT signals
+     * @return void
+     * @throws ConsumeException If an error occurs during consumption
+     */
+    public function consume(bool $stopOnSignal = true): void
+    {
+        $this->consumer->consume(function (array $data, string $messageId) {
+            return $this->handleMessage($data, $messageId);
+        }, $stopOnSignal);
+    }
+
+    /**
+     * Handle a message from the stream.
+     *
+     * @param array $data The message data
+     * @param string $messageId The message ID
+     * @return void
+     */
+    protected function handleMessage(array $data, string $messageId): void
+    {
+        $event = $data['event'] ?? 'unknown';
+        $payload = $data['payload'] ?? [];
+        
+        Log::info("Processing {$event} message {$messageId}");
+        
+        try {
+            // Handle different event types
+            match ($event) {
+                // Add your event types here
+                default => $this->handleUnknownEvent($event, $payload, $messageId),
+            };
+        } catch (\Exception $e) {
+            Log::error("Failed to process {$event} message {$messageId}: " . $e->getMessage());
+            throw $e; // Rethrow to let the consumer handle retries
+        }
+    }
+    
+    /**
+     * Handle an unknown event type.
+     *
+     * @param string $event The event type
+     * @param array $payload The event payload
+     * @param string $messageId The message ID
+     * @return void
+     */
+    protected function handleUnknownEvent(string $event, array $payload, string $messageId): void
+    {
+        Log::warning("Received unknown event type: {$event} with message ID: {$messageId}");
+        // You can choose to handle unknown events or just log them
+    }
+    
+    /**
+     * Get the stream name.
+     *
+     * @return string
+     */
+    public function getStream(): string
+    {
+        return $this->consumer->stream;
+    }
+    
+    /**
+     * Get the consumer group name.
+     *
+     * @return string
+     */
+    public function getGroup(): string
+    {
+        return $this->consumer->group;
+    }
+}

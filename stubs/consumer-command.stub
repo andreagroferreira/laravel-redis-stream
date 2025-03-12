@@ -1,0 +1,59 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Console\Command;
+use {{ consumer_class }};
+
+class {{ class }} extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'redis-stream:{{ stream }} 
+                           {--timeout= : Maximum runtime in seconds (0 for no timeout)}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Start the {{ stream }} stream consumer';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle(): int
+    {
+        $timeout = $this->option('timeout');
+        
+        $this->info("Starting {{ stream }} consumer (group: {{ group }})");
+        $this->info("Press Ctrl+C to stop");
+        
+        // Set time limit if specified
+        if ($timeout !== null && is_numeric($timeout) && $timeout > 0) {
+            $this->info("Timeout set to {$timeout} seconds");
+            set_time_limit((int)$timeout);
+        }
+        
+        try {
+            // Create consumer instance
+            $consumer = new {{ class }}();
+            
+            // Start consuming
+            $consumer->consume(true);
+            
+            return 0;
+        } catch (\RedisStream\Exceptions\ConnectionException $e) {
+            $this->error("Redis connection error: " . $e->getMessage());
+            return 1;
+        } catch (\Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+            return 2;
+        }
+    }
+}

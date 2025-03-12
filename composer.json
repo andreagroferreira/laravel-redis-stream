@@ -1,15 +1,60 @@
 {
-  "name": "wizardingcode/redis-stream",
-  "description": "Pacote para Redis Streams no Laravel",
+  "name": "andreagroferreira/redis-stream",
+  "description": "A powerful, reliable Redis Streams implementation for Laravel applications",
   "type": "library",
+  "keywords": [
+    "laravel",
+    "redis",
+    "streams",
+    "queue",
+    "messaging",
+    "event-sourcing",
+    "pubsub"
+  ],
+  "homepage": "https://github.com/andreagroferreira/redis-stream",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "André Ferreira",
+      "email": "andre.ferreira@wizardingcode.io",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "RedisStream\\": "src/"
     }
   },
-  "require": {
-    "illuminate/support": "^v12.1"
+  "autoload-dev": {
+    "psr-4": {
+      "RedisStream\\Tests\\": "tests/"
+    }
   },
+  "require": {
+    "php": "^8.1|^8.2|^8.3|^8.4",
+    "illuminate/support": "^9.0|^10.0|^12.0",
+    "illuminate/console": "^9.0|^10.0|^12.0",
+    "illuminate/filesystem": "^9.0|^10.0|^12.0"
+  },
+  "suggest": {
+    "ext-redis": "Required for phpredis driver (recommended for production)",
+    "predis/predis": "Required for predis driver (^1.1|^2.0)"
+  },
+  "require-dev": {
+    "pestphp/pest": "^2.0",
+    "pestphp/pest-plugin-laravel": "^2.0",
+    "orchestra/testbench": "^7.0|^8.0|^9.0",
+    "mockery/mockery": "^1.5"
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "extra": {
     "laravel": {
       "providers": [
