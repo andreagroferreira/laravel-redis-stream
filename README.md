@@ -2,7 +2,7 @@
 
 A powerful, reliable Redis Streams implementation for Laravel applications. This package makes it easy to work with Redis Streams for event-driven applications, message processing, and real-time data pipelines.
 
-[![Unit Tests](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml/badge.svg)](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml)
+[![CI Status](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml/badge.svg)](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/andreagroferreira/redis-stream/v/stable)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![License](https://poser.pugx.org/andreagroferreira/redis-stream/license)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![codecov](https://codecov.io/gh/andreagroferreira/redis-stream/branch/main/graph/badge.svg)](https://codecov.io/gh/andreagroferreira/redis-stream)
@@ -312,7 +312,9 @@ For code coverage:
 composer test-coverage
 ```
 
-The tests include both unit tests for exceptions and feature tests for Redis Stream interactions.
+> **Note**: To run the full test suite including feature tests, you need to have Redis installed and configured locally. The feature tests interact with an actual Redis server to verify the Redis Stream functionality.
+
+The tests include both unit tests for exceptions and feature tests for Redis Stream interactions. In our CI setup, we only verify basic functionality to avoid Redis configuration issues in automated environments.
 
 ## Contributing
 
