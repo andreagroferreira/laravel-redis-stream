@@ -5,6 +5,8 @@ A powerful, reliable Redis Streams implementation for Laravel applications. This
 [![Tests](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml/badge.svg)](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/andreagroferreira/redis-stream/v/stable)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![License](https://poser.pugx.org/andreagroferreira/redis-stream/license)](https://packagist.org/packages/andreagroferreira/redis-stream)
+[![codecov](https://codecov.io/gh/andreagroferreira/redis-stream/branch/main/graph/badge.svg)](https://codecov.io/gh/andreagroferreira/redis-stream)
+[![Total Downloads](https://img.shields.io/packagist/dt/andreagroferreira/redis-stream.svg)](https://packagist.org/packages/andreagroferreira/redis-stream)
 
 ## Features
 
@@ -49,7 +51,7 @@ The package will automatically detect which driver you're using.
 After installation, publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="RedisStream\RedisStreamServiceProvider"
+php artisan vendor:publish --provider="WizardingCode\RedisStream\RedisStreamServiceProvider"
 ```
 
 ## Configuration
@@ -84,8 +86,8 @@ This package provides specific exception types for better error handling:
 Example of handling exceptions:
 
 ```php
-use RedisStream\Exceptions\ConnectionException;
-use RedisStream\Exceptions\PublishException;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\PublishException;
 
 try {
     $producer->publish('user.created', $userData);
@@ -108,7 +110,7 @@ try {
 <?php
 
 // Publishing messages
-$producer = app(RedisStream\RedisStreamProducer::class);
+$producer = app(WizardingCode\RedisStream\RedisStreamProducer::class);
 $messageId = $producer->publish('user.created', [
     'user_id' => 1234,
     'name' => 'John Doe',
@@ -116,7 +118,7 @@ $messageId = $producer->publish('user.created', [
 ]);
 
 // Consuming messages (in a console command or job)
-$consumer = app(RedisStream\RedisStreamConsumer::class);
+$consumer = app(WizardingCode\RedisStream\RedisStreamConsumer::class);
 $consumer->consume(function($data, $messageId) {
     $event = $data['event'];
     $payload = $data['payload'];
@@ -196,7 +198,7 @@ class MyStreamHandler
 For high-throughput scenarios, you can publish messages in batches:
 
 ```php
-$producer = app(RedisStream\RedisStreamProducer::class);
+$producer = app(WizardingCode\RedisStream\RedisStreamProducer::class);
 
 $messages = [
     [
@@ -221,7 +223,7 @@ $messageIds = $producer->publishBatch($messages);
 To manage stream size:
 
 ```php
-$producer = app(RedisStream\RedisStreamProducer::class);
+$producer = app(WizardingCode\RedisStream\RedisStreamProducer::class);
 
 // Trim to approximately 10,000 items (fast)
 $deleted = $producer->trim(10000);
@@ -311,6 +313,19 @@ composer test-coverage
 ```
 
 The tests include both unit tests for exceptions and feature tests for Redis Stream interactions.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Security Vulnerabilities
+
+Please review [our security policy](SECURITY.md) on how to report security vulnerabilities.
+
+## Credits
+
+- [André Ferreira](https://github.com/andreagroferreira)
+- [All Contributors](../../contributors)
 
 ## License
 

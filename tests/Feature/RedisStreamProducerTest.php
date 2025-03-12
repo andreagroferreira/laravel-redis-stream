@@ -1,7 +1,7 @@
 <?php
 
-use RedisStream\RedisStreamProducer;
-use RedisStream\Exceptions\PublishException;
+use WizardingCode\RedisStream\RedisStreamProducer;
+use WizardingCode\RedisStream\Exceptions\PublishException;
 use Illuminate\Support\Facades\Redis;
 
 beforeEach(function () {

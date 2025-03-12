@@ -1,12 +1,12 @@
 <?php
 
-namespace RedisStream;
+namespace WizardingCode\RedisStream;
 
 use Illuminate\Support\Facades\Redis;
-use RedisStream\Adapters\PhpRedisAdapter;
-use RedisStream\Adapters\PredisAdapter;
-use RedisStream\Adapters\RedisAdapterInterface;
-use RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Adapters\PhpRedisAdapter;
+use WizardingCode\RedisStream\Adapters\PredisAdapter;
+use WizardingCode\RedisStream\Adapters\RedisAdapterInterface;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
 
 class RedisAdapterManager
 {

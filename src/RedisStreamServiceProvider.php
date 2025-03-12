@@ -1,6 +1,6 @@
 <?php
 
-namespace RedisStream;
+namespace WizardingCode\RedisStream;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
@@ -47,9 +47,9 @@ class RedisStreamServiceProvider extends ServiceProvider
         // Register console commands
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Console\ConsumeStreamCommand::class,
-                Console\MakeProducerCommand::class,
-                Console\MakeConsumerCommand::class,
+                WizardingCode\RedisStream\Console\ConsumeStreamCommand::class,
+                WizardingCode\RedisStream\Console\MakeProducerCommand::class,
+                WizardingCode\RedisStream\Console\MakeConsumerCommand::class,
             ]);
         }
     }

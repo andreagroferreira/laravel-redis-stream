@@ -1,8 +1,8 @@
 <?php
 
-use RedisStream\RedisStreamConsumer;
-use RedisStream\RedisStreamProducer;
-use RedisStream\Exceptions\MessageProcessingException;
+use WizardingCode\RedisStream\RedisStreamConsumer;
+use WizardingCode\RedisStream\RedisStreamProducer;
+use WizardingCode\RedisStream\Exceptions\MessageProcessingException;
 use Illuminate\Support\Facades\Redis;
 
 beforeEach(function () {

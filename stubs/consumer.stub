@@ -2,8 +2,8 @@
 
 namespace {{ namespace }};
 
-use RedisStream\RedisStreamConsumer;
-use RedisStream\Exceptions\ConsumeException;
+use WizardingCode\RedisStream\RedisStreamConsumer;
+use WizardingCode\RedisStream\Exceptions\ConsumeException;
 use Illuminate\Support\Facades\Log;
 
 class {{ class }}
@@ -11,7 +11,7 @@ class {{ class }}
     /**
      * The Redis Stream consumer instance.
      *
-     * @var RedisStreamConsumer
+     * @var WizardingCode\RedisStream\RedisStreamConsumer
      */
     protected RedisStreamConsumer $consumer;
 

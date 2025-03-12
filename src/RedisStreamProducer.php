@@ -1,20 +1,20 @@
 <?php
 
-namespace RedisStream;
+namespace WizardingCode\RedisStream;
 
 use Exception;
 use JsonException;
 use InvalidArgumentException;
-use RedisStream\Exceptions\ConnectionException;
-use RedisStream\Exceptions\PublishException;
-use RedisStream\RedisAdapterManager;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\PublishException;
+use WizardingCode\RedisStream\RedisAdapterManager;
 
 readonly class RedisStreamProducer
 {
     /**
      * The Redis adapter instance
      * 
-     * @var \RedisStream\Adapters\RedisAdapterInterface
+     * @var \WizardingCode\RedisStream\Adapters\RedisAdapterInterface
      */
     private $redis;
 

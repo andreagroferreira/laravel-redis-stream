@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests;
+namespace WizardingCode\RedisStream\Tests;
 
 use Illuminate\Support\Facades\Redis;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use RedisStream\RedisStreamServiceProvider;
+use WizardingCode\RedisStream\RedisStreamServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {

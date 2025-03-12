@@ -48,7 +48,7 @@ class {{ class }} extends Command
             $consumer->consume(true);
             
             return 0;
-        } catch (\RedisStream\Exceptions\ConnectionException $e) {
+        } catch (\WizardingCode\RedisStream\Exceptions\ConnectionException $e) {
             $this->error("Redis connection error: " . $e->getMessage());
             return 1;
         } catch (\Exception $e) {

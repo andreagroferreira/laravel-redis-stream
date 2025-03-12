@@ -11,7 +11,7 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(WizardingCode\RedisStream\Tests\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------

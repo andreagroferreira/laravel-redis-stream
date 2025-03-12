@@ -1,0 +1,16 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - src
+    level: 6
+    ignoreErrors:
+        -
+            message: '#Property .+ has no type specified#'
+            path: src/RedisStreamConsumer.php
+        -
+            message: '#Property .+ has no type specified#'
+            path: src/RedisStreamProducer.php
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

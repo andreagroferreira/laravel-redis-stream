@@ -2,15 +2,15 @@
 
 namespace {{ namespace }};
 
-use RedisStream\RedisStreamProducer;
-use RedisStream\Exceptions\PublishException;
+use WizardingCode\RedisStream\RedisStreamProducer;
+use WizardingCode\RedisStream\Exceptions\PublishException;
 
 class {{ class }}
 {
     /**
      * The Redis Stream producer instance.
      *
-     * @var RedisStreamProducer
+     * @var WizardingCode\RedisStream\RedisStreamProducer
      */
     protected RedisStreamProducer $producer;
 

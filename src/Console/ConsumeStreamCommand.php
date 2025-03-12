@@ -1,14 +1,14 @@
 <?php
 
-namespace RedisStream\Console;
+namespace WizardingCode\RedisStream\Console;
 
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use RedisStream\Exceptions\ConnectionException;
-use RedisStream\Exceptions\ConsumeException;
-use RedisStream\Exceptions\MessageProcessingException;
-use RedisStream\RedisStreamConsumer;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\ConsumeException;
+use WizardingCode\RedisStream\Exceptions\MessageProcessingException;
+use WizardingCode\RedisStream\RedisStreamConsumer;
 
 class ConsumeStreamCommand extends Command
 {
