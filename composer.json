@@ -1,0 +1,20 @@
+{
+  "name": "wizardingcode/redis-stream",
+  "description": "Pacote para Redis Streams no Laravel",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "RedisStream\\": "src/"
+    }
+  },
+  "require": {
+    "illuminate/support": "^v12.1"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RedisStream\\RedisStreamServiceProvider"
+      ]
+    }
+  }
+}
