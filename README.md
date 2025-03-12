@@ -2,11 +2,11 @@
 
 A powerful, reliable Redis Streams implementation for Laravel applications. This package makes it easy to work with Redis Streams for event-driven applications, message processing, and real-time data pipelines.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/laravel-redis-stream)
-[![Total Downloads](https://img.shields.io/packagist/dt/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/laravel-redis-stream)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/redis-stream)
+[![Total Downloads](https://img.shields.io/packagist/dt/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![PHP Version Support](https://img.shields.io/packagist/php-v/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/laravel-redis-stream)
-[![Laravel Version Support](https://img.shields.io/badge/Laravel-9.x%20|%2010.x%20|%2012.x-brightgreen.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/laravel-redis-stream)
+[![PHP Version Support](https://img.shields.io/packagist/php-v/andreagroferreira/redis-stream.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/redis-stream)
+[![Laravel Version Support](https://img.shields.io/badge/Laravel-9.x%20|%2010.x%20|%2012.x-brightgreen.svg?style=flat-square)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![GitHub forks](https://img.shields.io/github/forks/andreagroferreira/laravel-redis-stream.svg?style=social&label=Fork&maxAge=2592000)](https://github.com/andreagroferreira/laravel-redis-stream)
 [![GitHub stars](https://img.shields.io/github/stars/andreagroferreira/laravel-redis-stream.svg?style=social&label=Star&maxAge=2592000)](https://github.com/andreagroferreira/laravel-redis-stream)
 
