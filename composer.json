@@ -58,7 +58,7 @@
       "pestphp/pest-plugin-laravel": true
     }
   },
-  "minimum-stability": "stable",
+    "minimum-stability": "stable",
   "prefer-stable": true,
   "extra": {
     "laravel": {
