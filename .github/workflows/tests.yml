@@ -25,17 +25,28 @@ jobs:
       fail-fast: true
       matrix:
         php: [8.1, 8.2, 8.3]
-        laravel: [9.*, 10.*]
+        laravel: [9.*, 10.*, 11.*]
         dependency-version: [prefer-stable]
         include:
           - laravel: 9.*
             testbench: 7.*
+            pest: 1.*
           - laravel: 10.*
             testbench: 8.*
+            pest: 2.*
+          - laravel: 11.*
+            testbench: 9.*
+            pest: 2.*
         exclude:
-          # Laravel 10 requires PHP 8.1+
+          # Laravel 9 doesn't support PHP 8.3
           - php: 8.3
             laravel: 9.*
+          # Laravel 10 requires PHP 8.1+
+          - php: 8.0
+            laravel: 10.*
+          # Laravel 11 requires PHP 8.2+
+          - php: 8.1
+            laravel: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -54,6 +65,14 @@ jobs:
         run: |
           composer config allow-plugins.pestphp/pest-plugin true
           composer config allow-plugins.pestphp/pest-plugin-laravel true
+          
+          # Install specific Pest version based on Laravel version
+          if [[ "${{ matrix.laravel }}" == "9.*" ]]; then
+            composer require "pestphp/pest:^1.22" "pestphp/pest-plugin-laravel:^1.4" --no-interaction --no-update
+          else
+            composer require "pestphp/pest:^2.0" "pestphp/pest-plugin-laravel:^2.0" --no-interaction --no-update
+          fi
+          
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 

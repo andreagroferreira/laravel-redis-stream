@@ -41,8 +41,8 @@
     "predis/predis": "Required for predis driver (^1.1|^2.0)"
   },
   "require-dev": {
-    "pestphp/pest": "^2.0",
-    "pestphp/pest-plugin-laravel": "^2.0",
+    "pestphp/pest": "^1.22|^2.0",
+    "pestphp/pest-plugin-laravel": "^1.4|^2.0",
     "orchestra/testbench": "^7.0|^8.0|^9.0",
     "mockery/mockery": "^1.5"
   },
