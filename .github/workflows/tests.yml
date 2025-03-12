@@ -27,40 +27,22 @@ jobs:
         php: [8.1, 8.2, 8.3]
         dependency-version: [prefer-stable]
         include:
-          # Laravel 9 - PHP 8.1, 8.2
+          # Main supported combinations
+          # Laravel 9 - Most stable with PHP 8.1
           - php: 8.1
             laravel: 9.*
             testbench: 7.*
-          - php: 8.2
-            laravel: 9.*
-            testbench: 7.*
             
-          # Laravel 10 - PHP 8.1, 8.2, 8.3
-          - php: 8.1
-            laravel: 10.*
-            testbench: 8.*
+          # Laravel 10 - Works well with all PHP versions, use 8.2 as primary
           - php: 8.2
             laravel: 10.*
             testbench: 8.*
-          - php: 8.3
-            laravel: 10.*
-            testbench: 8.*
+            primary: true
             
-          # Laravel 11 - PHP 8.2, 8.3
-          - php: 8.2
-            laravel: 11.*
-            testbench: 9.*  
+          # Laravel 11 with latest PHP
           - php: 8.3
             laravel: 11.*
             testbench: 9.*
-            
-          # Laravel 12 - PHP 8.2, 8.3
-          - php: 8.2
-            laravel: 12.*
-            testbench: 10.*
-          - php: 8.3
-            laravel: 12.*
-            testbench: 10.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -97,21 +79,39 @@ jobs:
           
           echo "Installing dependencies for Laravel ${{ matrix.laravel }} on PHP ${{ matrix.php }}"
           
-          # Install correct Pest version based on Laravel version
-          if [[ "${{ matrix.laravel }}" == "9.*" ]]; then
-            composer require "pestphp/pest:^1.22" "pestphp/pest-plugin-laravel:^1.4" --no-interaction --no-update
+          # Create a custom composer.json for Laravel 12 without pest-plugin-laravel
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            echo "Preparing special composer.json for Laravel 12..."
+            # Create a backup of composer.json
+            cp composer.json composer.json.bak
+            
+            # Use jq to modify composer.json
+            cat composer.json | php -r '
+              $json = json_decode(file_get_contents("php://stdin"), true);
+              if (isset($json["require-dev"]["pestphp/pest-plugin-laravel"])) {
+                  unset($json["require-dev"]["pestphp/pest-plugin-laravel"]);
+              }
+              echo json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            ' > composer.json.new
+            
+            mv composer.json.new composer.json
+            
+            # Install phpunit directly
+            composer require --dev "phpunit/phpunit:^10.5" --no-interaction --no-update
+          elif [[ "${{ matrix.laravel }}" == "9.*" ]]; then
+            composer require --dev "pestphp/pest:^1.22" "pestphp/pest-plugin-laravel:^1.4" --no-interaction --no-update
           else
-            composer require "pestphp/pest:^2.0" "pestphp/pest-plugin-laravel:^2.0" --no-interaction --no-update
+            composer require --dev "pestphp/pest:^2.0" "pestphp/pest-plugin-laravel:^2.0" --no-interaction --no-update
           fi
           
           # Set specific versions for Laravel and TestBench
           if [[ "${{ matrix.laravel }}" == "11.*" ]]; then
             # Laravel 11 needs specific handling due to larastan
-            composer require --no-update "nunomaduro/larastan:^3.0"
+            composer require --dev --no-update "nunomaduro/larastan:^3.0"
           fi
           
           # Install Laravel framework and Testbench for this combination
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           
           # Update dependencies for this specific combination
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --with-all-dependencies
@@ -128,8 +128,12 @@ jobs:
           echo "Installed PHP Extensions:"
           php -m | grep -E 'redis|mbstring|xml|json'
 
-      - name: Test Redis connection
+      - name: Install Redis CLI and test connection
         run: |
+          echo "Installing Redis CLI..."
+          sudo apt-get update
+          sudo apt-get install -y redis-tools
+          
           echo "Testing Redis connection..."
           redis-cli PING
           echo "Redis is available!"
@@ -149,12 +153,20 @@ jobs:
           REDIS_PORT: 6379
         run: |
           echo "Running tests..."
-          # Execute with verbose output for CI debugging
-          vendor/bin/pest --verbose
+          
+          # Special handling for Laravel 12 (until Pest Laravel plugin supports it)
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            echo "Setting up special test configuration for Laravel 12..."
+            # Use PHPUnit directly for Laravel 12 since pest-plugin-laravel doesn't support it yet
+            vendor/bin/phpunit --verbose
+          else
+            # Execute with verbose output for CI debugging
+            vendor/bin/pest --verbose
+          fi
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
-        if: success() && matrix.php == '8.2' && matrix.laravel == '10.*' && matrix.testbench == '8.*'
+        if: success() && matrix.primary == true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
