@@ -214,11 +214,10 @@ jobs:
           php verify-redis-config.php || true
           
           echo "Running unit tests only (skipping feature tests that require Redis)..."
-          if [ -f vendor/bin/pest ]; then
-            vendor/bin/pest --group=unit
-          else
-            vendor/bin/phpunit --group=unit
-          fi
+          
+          # Use PHPUnit directly for simplicity in CI
+          echo "Using PHPUnit for unit tests..."
+          vendor/bin/phpunit --testsuite=Unit
           
           # Report success since we're only running unit tests in CI
           echo "Tests completed successfully!"

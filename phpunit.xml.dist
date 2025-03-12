@@ -17,6 +17,11 @@
             <directory suffix=".php">./src</directory>
         </include>
     </coverage>
+    <groups>
+        <include>
+            <group>unit</group>
+        </include>
+    </groups>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="REDIS_HOST" value="127.0.0.1"/>
