@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.1, 8.2]
+        php: [8.1, 8.2, 8.3]
         laravel: [9.*, 10.*]
         dependency-version: [prefer-stable]
         include:
@@ -32,6 +32,10 @@ jobs:
             testbench: 7.*
           - laravel: 10.*
             testbench: 8.*
+        exclude:
+          # Laravel 10 requires PHP 8.1+
+          - php: 8.3
+            laravel: 9.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -43,13 +47,20 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, gd, exif, iconv, imagick, fileinfo, redis
           coverage: none
 
       - name: Install dependencies
         run: |
+          composer config allow-plugins.pestphp/pest-plugin true
+          composer config allow-plugins.pestphp/pest-plugin-laravel true
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest
+        env:
+          REDIS_CLIENT: phpredis
+        run: |
+          # Setup Redis for testing
+          redis-cli FLUSHALL
+          vendor/bin/pest

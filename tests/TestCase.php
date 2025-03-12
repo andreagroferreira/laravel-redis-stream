@@ -2,18 +2,36 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Redis;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use RedisStream\RedisStreamServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function getPackageProviders($app)
+    /**
+     * Clean up the testing environment before the next test.
+     */
+    protected function tearDown(): void
     {
-        return [
-            RedisStreamServiceProvider::class,
-        ];
+        parent::tearDown();
+        Redis::connection('streams')->flushDB();
     }
 
+    /**
+     * Setup the test environment.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Redis::connection('streams')->flushDB();
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
     protected function getEnvironmentSetUp($app)
     {
         // Setup default database to use sqlite :memory:
@@ -39,6 +57,7 @@ abstract class TestCase extends BaseTestCase
             'password' => env('REDIS_PASSWORD', null),
             'port'     => env('REDIS_PORT', 6379),
             'database' => 1,
+            'client'   => env('REDIS_CLIENT', 'phpredis'), // Use phpredis for CI testing
         ]);
 
         // Setup Redis Streams configuration
@@ -49,5 +68,18 @@ abstract class TestCase extends BaseTestCase
         $app['config']->set('redis_stream.poll_interval', 1);
         $app['config']->set('redis_stream.retry_limit', 3);
         $app['config']->set('redis_stream.batch_size', 10);
+    }
+
+    /**
+     * Get package providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return array
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            RedisStreamServiceProvider::class,
+        ];
     }
 }
