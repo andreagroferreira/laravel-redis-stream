@@ -34,11 +34,6 @@ afterEach(function () {
 });
 
 it('can process messages from stream', function () {
-    // Skip this test in CI environment
-    if (getenv('CI')) {
-        $this->markTestSkipped('Skipping in CI environment');
-        return;
-    }
     
     // Arrange
     $stream = config('redis_stream.stream');

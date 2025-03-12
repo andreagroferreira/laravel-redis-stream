@@ -11,6 +11,7 @@
 |
 */
 
+// Feature tests require Laravel bootstrapping
 uses(WizardingCode\RedisStream\Tests\TestCase::class)->in('Feature');
 
 /*
