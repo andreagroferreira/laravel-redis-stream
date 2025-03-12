@@ -2,7 +2,7 @@
   "name": "andreagroferreira/redis-stream",
   "description": "A powerful, reliable Redis Streams implementation for Laravel applications",
   "type": "library",
-   "version": "1.0.0",
+  "version": "1.0.0",
   "keywords": [
     "laravel",
     "redis",
@@ -23,12 +23,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "RedisStream\\": "src/"
+      "WizardingCode\\RedisStream\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RedisStream\\Tests\\": "tests/"
+      "WizardingCode\\RedisStream\\Tests\\": "tests/"
     }
   },
   "require": {
@@ -45,11 +45,21 @@
     "pestphp/pest": "^1.22|^2.0",
     "pestphp/pest-plugin-laravel": "^1.4|^2.0",
     "orchestra/testbench": "^7.0|^8.0|^9.0",
-    "mockery/mockery": "^1.5"
+    "mockery/mockery": "^1.5",
+    "laravel/pint": "^1.0",
+    "nunomaduro/larastan": "^2.0"
   },
   "scripts": {
     "test": "vendor/bin/pest",
-    "test-coverage": "vendor/bin/pest --coverage"
+    "test-coverage": "vendor/bin/pest --coverage",
+    "format": "vendor/bin/pint",
+    "analyse": "vendor/bin/phpstan analyse",
+    "check-style": "vendor/bin/pint --test",
+    "check": [
+      "@check-style",
+      "@analyse",
+      "@test"
+    ]
   },
   "config": {
     "sort-packages": true,
@@ -63,7 +73,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "RedisStream\\RedisStreamServiceProvider"
+        "WizardingCode\\RedisStream\\RedisStreamServiceProvider"
       ]
     }
   }

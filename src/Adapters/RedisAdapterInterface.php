@@ -1,6 +1,6 @@
 <?php
 
-namespace RedisStream\Adapters;
+namespace WizardingCode\RedisStream\Adapters;
 
 interface RedisAdapterInterface
 {

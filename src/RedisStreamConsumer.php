@@ -1,22 +1,22 @@
 <?php
 
-namespace RedisStream;
+namespace WizardingCode\RedisStream;
 
 use Closure;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use JsonException;
-use RedisStream\Exceptions\ConnectionException;
-use RedisStream\Exceptions\ConsumeException;
-use RedisStream\Exceptions\MessageProcessingException;
-use RedisStream\RedisAdapterManager;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\ConsumeException;
+use WizardingCode\RedisStream\Exceptions\MessageProcessingException;
+use WizardingCode\RedisStream\RedisAdapterManager;
 
 readonly class RedisStreamConsumer
 {
     /**
      * The Redis adapter instance
      * 
-     * @var \RedisStream\Adapters\RedisAdapterInterface
+     * @var \WizardingCode\RedisStream\Adapters\RedisAdapterInterface
      */
     private $redis;
     

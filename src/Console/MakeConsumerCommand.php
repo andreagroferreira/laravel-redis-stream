@@ -1,6 +1,6 @@
 <?php
 
-namespace RedisStream\Console;
+namespace WizardingCode\RedisStream\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;

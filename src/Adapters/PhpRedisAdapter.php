@@ -1,9 +1,9 @@
 <?php
 
-namespace RedisStream\Adapters;
+namespace WizardingCode\RedisStream\Adapters;
 
 use Illuminate\Support\Facades\Redis;
-use RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
 
 class PhpRedisAdapter implements RedisAdapterInterface
 {

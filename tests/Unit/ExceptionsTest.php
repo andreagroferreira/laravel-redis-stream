@@ -1,10 +1,10 @@
 <?php
 
-use RedisStream\Exceptions\RedisStreamException;
-use RedisStream\Exceptions\ConnectionException;
-use RedisStream\Exceptions\PublishException;
-use RedisStream\Exceptions\ConsumeException;
-use RedisStream\Exceptions\MessageProcessingException;
+use WizardingCode\RedisStream\Exceptions\RedisStreamException;
+use WizardingCode\RedisStream\Exceptions\ConnectionException;
+use WizardingCode\RedisStream\Exceptions\PublishException;
+use WizardingCode\RedisStream\Exceptions\ConsumeException;
+use WizardingCode\RedisStream\Exceptions\MessageProcessingException;
 
 it('creates base redis stream exception', function () {
     // Act

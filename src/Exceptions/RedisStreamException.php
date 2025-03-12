@@ -1,6 +1,6 @@
 <?php
 
-namespace RedisStream\Exceptions;
+namespace WizardingCode\RedisStream\Exceptions;
 
 use Exception;
 use Throwable;
