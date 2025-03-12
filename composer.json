@@ -2,6 +2,7 @@
   "name": "andreagroferreira/redis-stream",
   "description": "A powerful, reliable Redis Streams implementation for Laravel applications",
   "type": "library",
+   "version": "1.0.0",
   "keywords": [
     "laravel",
     "redis",
@@ -11,7 +12,7 @@
     "event-sourcing",
     "pubsub"
   ],
-  "homepage": "https://github.com/andreagroferreira/redis-stream",
+  "homepage": "https://github.com/andreagroferreira/laravel-redis-stream",
   "license": "MIT",
   "authors": [
     {
@@ -57,7 +58,7 @@
       "pestphp/pest-plugin-laravel": true
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "extra": {
     "laravel": {
