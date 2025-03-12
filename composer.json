@@ -47,11 +47,12 @@
     "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
     "mockery/mockery": "^1.5",
     "laravel/pint": "^1.0",
-    "nunomaduro/larastan": "^2.0|^3.0"
+    "nunomaduro/larastan": "^2.0|^3.0",
+    "phpunit/phpunit": "^9.5|^10.0"
   },
   "scripts": {
-    "test": "vendor/bin/pest",
-    "test-coverage": "vendor/bin/pest --coverage",
+    "test": "[ -f vendor/bin/pest ] && vendor/bin/pest || vendor/bin/phpunit",
+    "test-coverage": "[ -f vendor/bin/pest ] && vendor/bin/pest --coverage || vendor/bin/phpunit --coverage-text",
     "format": "vendor/bin/pint",
     "analyse": "vendor/bin/phpstan analyse",
     "check-style": "vendor/bin/pint --test",

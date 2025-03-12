@@ -11,7 +11,10 @@
 |
 */
 
-uses(WizardingCode\RedisStream\Tests\TestCase::class)->in('Feature');
+uses(WizardingCode\RedisStream\Tests\TestCase::class)->in('Feature')->group('feature');
+
+// Unit tests don't need Laravel bootstrapping
+uses()->in('Unit')->group('unit');
 
 /*
 |--------------------------------------------------------------------------

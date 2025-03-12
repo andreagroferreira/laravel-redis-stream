@@ -2,7 +2,7 @@
 
 A powerful, reliable Redis Streams implementation for Laravel applications. This package makes it easy to work with Redis Streams for event-driven applications, message processing, and real-time data pipelines.
 
-[![Tests](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml/badge.svg)](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml)
+[![Unit Tests](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml/badge.svg)](https://github.com/andreagroferreira/redis-stream/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/andreagroferreira/redis-stream/v/stable)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![License](https://poser.pugx.org/andreagroferreira/redis-stream/license)](https://packagist.org/packages/andreagroferreira/redis-stream)
 [![codecov](https://codecov.io/gh/andreagroferreira/redis-stream/branch/main/graph/badge.svg)](https://codecov.io/gh/andreagroferreira/redis-stream)
